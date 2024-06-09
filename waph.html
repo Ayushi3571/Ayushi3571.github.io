@@ -1,20 +1,186 @@
+<!DOCTYPE html>
+<html>
 <head>
-<meta charset="utf-8">
-<title>WAPH-Ayushi</title>
+    <meta charset="utf-8">
+    <title>WAPH - Ayushi Sharma</title>
+    <link rel="stylesheet" href="https://waph-uc.github.io/style3.css">
+    <style>
+        .button {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            padding: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .round {
+            border-radius: 8px;
+        }
+
+        #response {
+            background-color: #ff9800;
+            /* Orange */
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        function validateInput(input) {
+            if (input.trim().length === 0) {
+                alert("Input cannot be empty");
+                return false;
+            }
+            return true;
+        }
+
+        function encodeInput(input) {
+            var encodedInput = document.createElement('div');
+            encodedInput.innerText = input;
+            return encodedInput.innerHTML;
+        }
+
+        function getEcho() {
+            var input = document.getElementById("data").value;
+            if (!validateInput(input)) {
+                return;
+            }
+            input = encodeInput(input);
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("Received data=" + xhttp.responseText);
+                    document.getElementById("response").innerText = "Response from server: " + xhttp.responseText;
+                }
+            }
+            xhttp.open("GET", "echo.php?data=" + encodeURIComponent(input), true);
+            xhttp.send();
+            document.getElementById("data").value = "";
+        }
+
+        function jQueryAjaxGet() {
+            var input = $("#data").val();
+            if (!validateInput(input)) {
+                return;
+            }
+            input = encodeInput(input);
+            $.get("echo.php?data=" + encodeURIComponent(input), function(result) {
+                $("#response").html("Response from server: " + result);
+            });
+            $("#data").val("");
+        }
+
+        function jQueryAjaxPost() {
+            var input = $("#data").val();
+            if (!validateInput(input)) {
+                return;
+            }
+            input = encodeInput(input);
+            $.post("echo.php", { data: input }, function(result) {
+                $("#response").html("Response from server: " + result);
+            });
+            $("#data").val("");
+        }
+
+        async function guessAge(name) {
+            if (!validateInput(name)) {
+                return;
+            }
+            name = encodeInput(name);
+            const response = await fetch(`https://api.agify.io/?name=${encodeURIComponent(name)}`);
+            const result = await response.json();
+            $("#response").text("Hi " + name + ", your age should be " + result.age);
+        }
+
+        $(document).ready(function() {
+            $.get("https://v2.jokeapi.dev/joke/Programming?type=single", function(result) {
+                console.log("From jokeAPI: " + JSON.stringify(result));
+                $("#response").text("A programming joke of the day: " + result.joke);
+            });
+        });
+    </script>
 </head>
-
 <body>
-<div id="top">	
-  <h1>Web Application Programming and Hacking</h1>
-  <h2>Front-end Web Development Individual Project</h2> 
-  <h3>Instructor: Dr. Phu Phung</h3>
-</div>
-<div id="menubar">
-  <h3>Student: Ayushi Sharma</h3>
-</div>
-<div id="main">
-  <p>A simple HTML page </p>
-  Using the <a href="https://www.w3schools.com/html"> W3Schools template</a>	
-</div>
+    <div class="container">
+        <div id="top">
+            <h1>Web Application and Hacking</h1>
+            <h2>Front-end Web Development Lab</h2>
+        </div>
+        <div class="wrapper">
+            <div id="sidebar">
+                <h3>Student: Ayushi Sharma</h3>
+                <img src="images/UC_Portraits2023-1475 (1).jpg" alt="My headshot" width="50">
+                <div id="email" onclick="showhideemail()">Show my email</div>
+                <script src="email.js"></script>
 
+                <hr>
+                <div id="form">
+                    <i>Form with HTTP POST Request</i>
+                    <form action="/echo.php" method="POST" onsubmit="return validateInput(this.data.value)">
+                        Your input: <input name="data">
+                        <input type="submit" value="Submit">
+                    </form>
+                </div>
+                <hr>
+                <b>Experiments with JavaScript code</b><br>
+                <i>Inline JavaScript</i>
+                <div id="date" onclick="document.getElementById('date').innerText=Date()">Click here to show Date()</div>
+
+                <hr>
+                <div id="digit-clock"></div>
+                <script>
+                    function displayTime() {
+                        document.getElementById('digit-clock').innerHTML = "Current time: " + new Date();
+                    }
+                    setInterval(displayTime, 500);
+                </script>
+
+                <hr>
+
+                <div id="analog-clock-container"></div>
+                <canvas id="analog-clock" width="150" height="150" style="background-color:#999"></canvas>
+                <script src="https://waph-uc.github.io/clock.js"></script>
+                <script>
+                    var canvas = document.getElementById("analog-clock");
+                    var ctx = canvas.getContext("2d");
+                    var radius = canvas.height / 2;
+                    ctx.translate(radius, radius);
+                    setInterval(drawClock, 1000);
+
+                    function drawClock() {
+                        drawFace(ctx, radius);
+                        drawNumbers(ctx, radius);
+                        drawTime(ctx, radius);
+                    }
+                </script>
+            </div>
+            <div id="main">
+                <p>A simple HTML page </p>
+                Using the <a href="https://www.w3schools.com/html"> W3Schools template</a>
+            </div>
+            <hr>
+
+            <hr>
+            <div>
+                <i>Ajax requests</i><br> Your input:
+                <input name="data" onkeypress="console.log('You have pressed a key')" id="data">
+                <input class="button round" type="button" value="Ajax Echo" onclick="getEcho()">
+                <input class="button round" type="button" value="jQuery Ajax GET Echo" onclick="jQueryAjaxGet()">
+                <input class="button round" type="button" value="jQuery Ajax POST Echo" onclick="jQueryAjaxPost()">
+                <div id="response"></div>
+            </div>
+
+            <hr>
+            <div>
+                <i>Guess age from name</i><br> Your name:
+                <input name="name" onkeypress="console.log('You have pressed a key')" id="name">
+                <input class="button round" type="button" value="Guess Age" onclick="guessAge($('#name').val())">
+            </div>
+        </div>
+    </div>
 </body>
+</html>
