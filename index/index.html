@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="en">
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -7,11 +8,11 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZHTSHY8QBR"></script>
   <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-  gtag('config', 'G-ZHTSHY8QBR');
+    gtag('config', 'G-ZHTSHY8QBR');
   </script>
   
   <!-- Bootstrap css -->
@@ -30,12 +31,70 @@
   <link rel="shortcut icon" href="images/Bighead.jpg">
 
   <title>Ayushi Sharma ✨</title>
+
+  <style>
+    /* Add custom CSS for the hamburger menu */
+    .hamburger {
+      display: none;
+      cursor: pointer;
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 1000;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background-color: #333;
+      margin: 5px;
+      transition: 0.4s;
+    }
+
+    .menu {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      right: 15px;
+      top: 45px;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu a {
+      padding: 10px 20px;
+      text-decoration: none;
+      color: #333;
+    }
+
+    .menu a:hover {
+      background-color: #f0f0f0;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: block;
+      }
+    }
+  </style>
 </head>
 
 <header>
   <div class="navbar navbar-default navbar-static-top">
     <div class="container">
       <div class="navbar-brand" style="color: white;"><strong>Ayushi Sharma</strong></div>
+      <div class="hamburger" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="menu" id="menu">
+        <a href="#education">Education</a>
+        <a href="#projects">Projects</a>
+        <a href="waph.html">WAPH</a>
+      </div>
     </div>
   </div>
 </header>
@@ -93,6 +152,15 @@
       </div>
     </div>
   </div>
+
+  <div class="jumbotron" id="projects">
+    <div class="container">
+      <h2>What I Learned</h2>
+      <p>
+        In this course, I learned the fundamentals of web application development, encompassing both front-end technologies like HTML5, JavaScript, and CSS, and back-end development with PHP and MySQL. I gained hands-on experience with web application vulnerabilities and attacks, learning to identify and mitigate security threats through practical exercises. Additionally, I enhanced my programming skills to develop secure and robust web applications, incorporating secure coding practices. The course also covered version control using git, equipping me with essential tools for collaborative development and code management. Overall, I developed a comprehensive understanding of web application security and the ability to design, implement, and evaluate secure web-based solutions.
+      </p>
+    </div>
+  </div>
 </body>
 
 <footer>
@@ -131,5 +199,16 @@
 </footer>
 
 <script src="js/bootstrap.min.js"></script>
+<script>
+  function toggleMenu() {
+    var menu = document.getElementById('menu');
+    if (menu.style.display === 'flex') {
+      menu.style.display = 'none';
+    } else {
+      menu.style.display = 'flex';
+    }
+  }
+</script>
 
 <!-- Website Template Designed by Ben Emdon 2024 -->
+</html>
