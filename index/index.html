@@ -30,7 +30,7 @@
   <!-- Website icon-->
   <link rel="shortcut icon" href="images/Bighead.jpg">
 
-  <title>Ayushi Sharma ✨</title>
+  <title>✨ Ayushi Sharma ✨</title>
 
   <style>
     /* Add custom CSS for the hamburger menu */
@@ -93,7 +93,7 @@
       <div class="menu" id="menu">
         <a href="#education">Education</a>
         <a href="#projects">Projects</a>
-        <a href="waph.html">WAPH</a>
+        <a href="https://github.com/Ayushi3571/waph.html">WAPH</a>
       </div>
     </div>
   </div>
@@ -153,13 +153,6 @@
     </div>
   </div>
 
-  <div class="jumbotron" id="projects">
-    <div class="container">
-      <h2>What I Learned</h2>
-      <p>
-        In this course, I learned the fundamentals of web application development, encompassing both front-end technologies like HTML5, JavaScript, and CSS, and back-end development with PHP and MySQL. I gained hands-on experience with web application vulnerabilities and attacks, learning to identify and mitigate security threats through practical exercises. Additionally, I enhanced my programming skills to develop secure and robust web applications, incorporating secure coding practices. The course also covered version control using git, equipping me with essential tools for collaborative development and code management. Overall, I developed a comprehensive understanding of web application security and the ability to design, implement, and evaluate secure web-based solutions.
-      </p>
-    </div>
   </div>
 </body>
 
@@ -208,6 +201,38 @@
       menu.style.display = 'flex';
     }
   }
+  function setCookie(name, value, days) {
+  var expires = "";
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+function getCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
+window.onload = function() {
+  var lastVisit = getCookie("lastVisit");
+  var message = "";
+  if (lastVisit) {
+    message = "Welcome back! Your last visit was " + lastVisit;
+  } else {
+    message = "Welcome to my homepage for the first time!";
+  }
+  document.getElementById("welcomeMessage").innerText = message;
+  setCookie("lastVisit", new Date().toLocaleString(), 365);
+}
 </script>
 
 <!-- Website Template Designed by Ben Emdon 2024 -->
