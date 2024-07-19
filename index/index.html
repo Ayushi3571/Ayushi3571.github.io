@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta charset="utf-8"/>
@@ -79,40 +78,42 @@
   </style>
 </head>
 
+<body>
 <header>
   <div class="navbar navbar-default navbar-static-top">
     <div class="container">
       <div class="navbar-brand" style="color: white;"><strong>Ayushi Sharma</strong></div>
       <div class="hamburger" onclick="toggleMenu()">
-        <div class="menu" id="menu">
-        <a href="#education">Education</a>
-        <a href="#projects">Projects</a>
-        <a href="https://github.com/Ayushi3571/waph.html">WAPH</a>
         <div></div>
         <div></div>
         <div></div>
       </div>
+      <div class="menu" id="menu">
+        <a href="#education">Education</a>
+        <a href="#projects">Projects</a>
+        <a href="https://github.com/Ayushi3571/waph.html">WAPH</a>
       </div>
     </div>
   </div>
 </header>
 
-<body>
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N5W7WMCM"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
+
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-                if (!document.cookie.includes("visited")) {
-                    alert("Welcome to my homepage for the first time!");
-                    document.cookie = "visited=" + new Date();
-                } else {
-                    const lastVisit = document.cookie.replace(/(?:(?:^|.*;\s*)visited\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-                    alert("Welcome back! Your last visit was " + lastVisit);
-                    document.cookie = "visited=" + new Date();
-                }
-  }
+    if (!document.cookie.includes("visited")) {
+      alert("Welcome to my homepage for the first time!");
+      document.cookie = "visited=" + new Date();
+    } else {
+      const lastVisit = document.cookie.replace(/(?:(?:^|.*;\s*)visited\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+      alert("Welcome back! Your last visit was " + lastVisit);
+      document.cookie = "visited=" + new Date();
+    }
+  });
+
   function toggleMenu() {
     var menu = document.getElementById('menu');
     if (menu.style.display === 'flex') {
@@ -122,61 +123,59 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
 </script>
-  <div class="jumbotron" id="jumbo1">
-    <div class="container">
-      <h1>Computer Science Student</h1>
-      <p>Cincinnati, OH, USA</p>
-    </div>
-  </div>
 
-  <div class="jumbotron" id="jumbo2">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-          <img src="images/profile.jpg" alt="Profile Picture" class="profile-pic">
-        </div>
-        <div class="col-md-8">
-          <h1>Hey, I'm Ayushi</h1>
-          <hr align="center">
-          <p>
-            I'm a computer science student at the University of Cincinnati. Previously, I created a game of Pong using reinforcement learning during my summer internship at Discovery Labs Global.
-          </p>
-          <p>
-            In my free time, I enjoy exploring new technologies, working on projects, and expanding my knowledge in various fields of computer science.
-          </p>
-        </div>
+<div class="jumbotron" id="jumbo1">
+  <div class="container">
+    <h1>Computer Science Student</h1>
+    <p>Cincinnati, OH, USA</p>
+  </div>
+</div>
+
+<div class="jumbotron" id="jumbo2">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <img src="images/profile.jpg" alt="Profile Picture" class="profile-pic">
+      </div>
+      <div class="col-md-8">
+        <h1>Hey, I'm Ayushi</h1>
+        <hr align="center">
+        <p>
+          I'm a computer science student at the University of Cincinnati. Previously, I created a game of Pong using reinforcement learning during my summer internship at Discovery Labs Global.
+        </p>
+        <p>
+          In my free time, I enjoy exploring new technologies, working on projects, and expanding my knowledge in various fields of computer science.
+        </p>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="jumbotron" id="education">
-    <div class="container">
-      <h2>Education</h2>
-      <p><strong>University of Cincinnati</strong> - Bachelor of Science in Computer Science, GPA: 3.6/4.00 (Expected Graduation: May 2026)</p>
-      <p>Relevant Courses: Data Structures, Linear Algebra, Computer Systems</p>
+<div class="jumbotron" id="education">
+  <div class="container">
+    <h2>Education</h2>
+    <p><strong>University of Cincinnati</strong> - Bachelor of Science in Computer Science, GPA: 3.6/4.00 (Expected Graduation: May 2026)</p>
+    <p>Relevant Courses: Data Structures, Linear Algebra, Computer Systems</p>
+  </div>
+</div>
+
+<div class="jumbotron" id="projects">
+  <div class="container">
+    <h2>Projects</h2>
+    <div class="project">
+      <h3>Job Recommendation System (January 2024 - April 2024)</h3>
+      <p>Built a Word2Vec model with Gensim to evaluate the most suitable job based on title and requirements. Trained the model on a dataset of 30,000 jobs and coded a web scraper with Node.js to collect job descriptions.</p>
+    </div>
+    <div class="project">
+      <h3>MakeUC Hackathon (November 2023)</h3>
+      <p>Utilized a pre-trained machine learning model YOLO to create a website for recognizing objects and reading text aloud for blind users. Hosted the solution on Azure for seamless accessibility and reliability.</p>
+    </div>
+    <div class="project">
+      <h3>Project on Database Management (June 2019 - December 2019)</h3>
+      <p>Developed an interactive GUI using the tkinter module in Python with MySQL as the backend to store data. The app allows users to interact with the database to add, update, and delete records.</p>
     </div>
   </div>
-
-  <div class="jumbotron" id="projects">
-    <div class="container">
-      <h2>Projects</h2>
-      <div class="project">
-        <h3>Job Recommendation System (January 2024 - April 2024)</h3>
-        <p>Built a Word2Vec model with Gensim to evaluate the most suitable job based on title and requirements. Trained the model on a dataset of 30,000 jobs and coded a web scraper with Node.js to collect job descriptions.</p>
-      </div>
-      <div class="project">
-        <h3>MakeUC Hackathon (November 2023)</h3>
-        <p>Utilized a pre-trained machine learning model YOLO to create a website for recognizing objects and reading text aloud for blind users. Hosted the solution on Azure for seamless accessibility and reliability.</p>
-      </div>
-      <div class="project">
-        <h3>Project on Database Management (June 2019 - December 2019)</h3>
-        <p>Developed an interactive GUI using the tkinter module in Python with MySQL as the backend to store data. The app allows users to interact with the database to add, update, and delete records.</p>
-      </div>
-    </div>
-  </div>
-
-  </div>
-</body>
+</div>
 
 <footer>
   <div class="container text-center">
@@ -214,7 +213,4 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </footer>
 
 <script src="js/bootstrap.min.js"></script>
-  
 
-<!-- Website Template Designed by Ben Emdon 2024 -->
-</html>
