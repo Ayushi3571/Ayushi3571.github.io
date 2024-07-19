@@ -102,7 +102,26 @@
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N5W7WMCM"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-  
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+                if (!document.cookie.includes("visited")) {
+                    alert("Welcome to my homepage for the first time!");
+                    document.cookie = "visited=" + new Date();
+                } else {
+                    const lastVisit = document.cookie.replace(/(?:(?:^|.*;\s*)visited\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+                    alert("Welcome back! Your last visit was " + lastVisit);
+                    document.cookie = "visited=" + new Date();
+                }
+  }
+  function toggleMenu() {
+    var menu = document.getElementById('menu');
+    if (menu.style.display === 'flex') {
+      menu.style.display = 'none';
+    } else {
+      menu.style.display = 'flex';
+    }
+  }
+</script>
   <div class="jumbotron" id="jumbo1">
     <div class="container">
       <h1>Computer Science Student</h1>
@@ -195,28 +214,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </footer>
 
 <script src="js/bootstrap.min.js"></script>
-<script>
-  function toggleMenu() {
-    var menu = document.getElementById('menu');
-    if (menu.style.display === 'flex') {
-      menu.style.display = 'none';
-    } else {
-      menu.style.display = 'flex';
-    }
-  }
   
-  document.addEventListener("DOMContentLoaded", function() {
-                if (!document.cookie.includes("visited")) {
-                    alert("Welcome to my homepage for the first time!");
-                    document.cookie = "visited=" + new Date();
-                } else {
-                    const lastVisit = document.cookie.replace(/(?:(?:^|.*;\s*)visited\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-                    alert("Welcome back! Your last visit was " + lastVisit);
-                    document.cookie = "visited=" + new Date();
-                }
-  }
-
-</script>
 
 <!-- Website Template Designed by Ben Emdon 2024 -->
 </html>
