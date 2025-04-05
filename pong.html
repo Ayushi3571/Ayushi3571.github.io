@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atari Pong vs AI</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #222;
+            font-family: 'Courier New', Courier, monospace;
+            color: white;
+            flex-direction: column;
+        }
+        canvas {
+            border: 2px solid white;
+            background-color: #000;
+        }
+        .controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .scoreboard {
+            display: flex;
+            justify-content: space-between;
+            width: 600px;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .connection-status {
+            margin-top: 10px;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        .connected {
+            background-color: #007700;
+        }
+        .disconnected {
+            background-color: #770000;
+        }
+        button {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        button:hover {
+            background-color: #777;
+        }
+    </style>
+</head>
+<body>
+    <h1>ATARI PONG vs AI</h1>
+    <div class="scoreboard">
+        <div>YOU: <span id="player-score">0</span></div>
+        <div>AI: <span id="ai-score">0</span></div>
+    </div>
+    <canvas id="pongCanvas" width="600" height="400"></canvas>
+    <div class="controls">
+        <p>Use mouse or up/down arrow keys to move your paddle</p>
+        <button id="startGame">Start Game</button>
+        <button id="resetGame">Reset Game</button>
+        <div id="connectionStatus" class="connection-status disconnected">Disconnected from AI Server</div>
+    </div>
+
+    <script>
+        // Game constants
+        const PADDLE_HEIGHT = 80;
+        const PADDLE_WIDTH = 10;
+        const BALL_RADIUS = 8;
+        const PADDLE_SPEED = 8;
+        const INITIAL_BALL_SPEED = 5;
+        
+        // Game variables
+        let playerScore = 0;
+        let aiScore = 0;
+        let playerPaddleY = 160;
+        let aiPaddleY = 160;
+        let ballX = 300;
+        let ballY = 200;
+        let ballSpeedX = INITIAL_BALL_SPEED;
+        let ballSpeedY = INITIAL_BALL_SPEED;
+        let gameRunning = false;
+        let wsConnection = null;
+        let keysPressed = {};
+        
+        // DOM Elements
+        const canvas = document.getElementById('pongCanvas');
+        const ctx = canvas.getContext('2d');
+        const playerScoreEl = document.getElementById('player-score');
+        const aiScoreEl = document.getElementById('ai-score');
+        const startButton = document.getElementById('startGame');
+        const resetButton = document.getElementById('resetGame');
+        const connectionStatus = document.getElementById('connectionStatus');
+        
+        // WebSocket setup function
+        function connectToAIServer() {
+            // Replace with your actual server URL
+            const serverUrl = "ws://localhost:8080";
+            
+            try {
+                wsConnection = new WebSocket(serverUrl);
+                
+                wsConnection.onopen = () => {
+                    connectionStatus.textContent = "Connected to AI Server";
+                    connectionStatus.classList.remove("disconnected");
+                    connectionStatus.classList.add("connected");
+                    console.log("WebSocket connection established");
+                };
+                
+                wsConnection.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    // Handle AI paddle position updates
+                    if (data.aiPaddleY !== undefined) {
+                        aiPaddleY = data.aiPaddleY;
+                    }
+                };
+                
+                wsConnection.onclose = () => {
+                    connectionStatus.textContent = "Disconnected from AI Server";
+                    connectionStatus.classList.remove("connected");
+                    connectionStatus.classList.add("disconnected");
+                    console.log("WebSocket connection closed");
+                    
+                    // Use simple AI logic when disconnected
+                    useLocalAI = true;
+                };
+                
+                wsConnection.onerror = (error) => {
+                    console.error("WebSocket error:", error);
+                    connectionStatus.textContent = "Error connecting to AI Server";
+                    connectionStatus.classList.remove("connected");
+                    connectionStatus.classList.add("disconnected");
+                    
+                    // Use simple AI logic when error occurs
+                    useLocalAI = true;
+                };
+                
+            } catch (error) {
+                console.error("Failed to connect to WebSocket server:", error);
+                connectionStatus.textContent = "Failed to connect to AI Server";
+                connectionStatus.classList.remove("connected");
+                connectionStatus.classList.add("disconnected");
+                
+                // Use simple AI logic when connection fails
+                useLocalAI = true;
+            }
+        }
+        
+        // Send game state to server
+        function sendGameState() {
+            if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
+                wsConnection.send(JSON.stringify({
+                    ballX: ballX,
+                    ballY: ballY,
+                    ballSpeedX: ballSpeedX,
+                    ballSpeedY: ballSpeedY,
+                    playerPaddleY: playerPaddleY
+                }));
+            }
+        }
+        
+        // Simple local AI for when server is disconnected
+        let useLocalAI = true;
+        function updateLocalAI() {
+            // Simple AI: follow the ball with some delay
+            const aiCenter = aiPaddleY + PADDLE_HEIGHT / 2;
+            const targetY = ballY;
+            
+            if (Math.abs(aiCenter - targetY) > PADDLE_SPEED) {
+                if (aiCenter < targetY) {
+                    aiPaddleY += PADDLE_SPEED * 0.7; // Slower than player for fairness
+                } else {
+                    aiPaddleY -= PADDLE_SPEED * 0.7;
+                }
+            }
+            
+            // Keep paddle within canvas boundaries
+            if (aiPaddleY < 0) aiPaddleY = 0;
+            if (aiPaddleY + PADDLE_HEIGHT > canvas.height) aiPaddleY = canvas.height - PADDLE_HEIGHT;
+        }
+        
+        // Draw game elements
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw center line
+            ctx.beginPath();
+            ctx.setLineDash([10, 10]);
+            ctx.moveTo(canvas.width / 2, 0);
+            ctx.lineTo(canvas.width / 2, canvas.height);
+            ctx.strokeStyle = "#FFF";
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Draw paddles
+            ctx.fillStyle = "#FFF";
+            // Player paddle (left)
+            ctx.fillRect(0, playerPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
+            // AI paddle (right)
+            ctx.fillRect(canvas.width - PADDLE_WIDTH, aiPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
+            
+            // Draw ball
+            ctx.beginPath();
+            ctx.arc(ballX, ballY, BALL_RADIUS, 0, Math.PI * 2);
+            ctx.fillStyle = "#FFF";
+            ctx.fill();
+            ctx.closePath();
+        }
+        
+        // Update game state
+        function update() {
+            if (!gameRunning) return;
+            
+            // Move player paddle with keyboard
+            if (keysPressed["ArrowUp"]) {
+                playerPaddleY -= PADDLE_SPEED;
+            }
+            if (keysPressed["ArrowDown"]) {
+                playerPaddleY += PADDLE_SPEED;
+            }
+            
+            // Keep player paddle within canvas boundaries
+            if (playerPaddleY < 0) playerPaddleY = 0;
+            if (playerPaddleY + PADDLE_HEIGHT > canvas.height) playerPaddleY = canvas.height - PADDLE_HEIGHT;
+            
+            // Update AI paddle - either from server or local logic
+            if (useLocalAI) {
+                updateLocalAI();
+            } else {
+                // Send game state to AI server
+                sendGameState();
+            }
+            
+            // Move ball
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+            
+            // Ball collision with top and bottom walls
+            if (ballY - BALL_RADIUS < 0 || ballY + BALL_RADIUS > canvas.height) {
+                ballSpeedY = -ballSpeedY;
+                playSound('wall');
+            }
+            
+            // Ball collision with paddles
+            // Player paddle collision
+            if (ballX - BALL_RADIUS < PADDLE_WIDTH && 
+                ballY > playerPaddleY && 
+                ballY < playerPaddleY + PADDLE_HEIGHT) {
+                
+                ballX = PADDLE_WIDTH + BALL_RADIUS; // Prevent ball from getting stuck
+                ballSpeedX = -ballSpeedX;
+                
+                // Adjust angle based on where the ball hits the paddle
+                const hitPosition = (ballY - playerPaddleY) / PADDLE_HEIGHT;
+                ballSpeedY = INITIAL_BALL_SPEED * 2 * (hitPosition - 0.5);
+                
+                // Increase speed slightly with each hit
+                ballSpeedX *= 1.05;
+                playSound('paddle');
+            }
+            
+            // AI paddle collision
+            if (ballX + BALL_RADIUS > canvas.width - PADDLE_WIDTH && 
+                ballY > aiPaddleY && 
+                ballY < aiPaddleY + PADDLE_HEIGHT) {
+                
+                ballX = canvas.width - PADDLE_WIDTH - BALL_RADIUS; // Prevent ball from getting stuck
+                ballSpeedX = -ballSpeedX;
+                
+                // Adjust angle based on where the ball hits the paddle
+                const hitPosition = (ballY - aiPaddleY) / PADDLE_HEIGHT;
+                ballSpeedY = INITIAL_BALL_SPEED * 2 * (hitPosition - 0.5);
+                
+                // Increase speed slightly with each hit
+                ballSpeedX *= 1.05;
+                playSound('paddle');
+            }
+            
+            // Score points and reset ball
+            if (ballX < 0) {
+                // AI scores
+                aiScore++;
+                aiScoreEl.textContent = aiScore;
+                resetBall();
+                playSound('score');
+            } else if (ballX > canvas.width) {
+                // Player scores
+                playerScore++;
+                playerScoreEl.textContent = playerScore;
+                resetBall();
+                playSound('score');
+            }
+        }
+        
+        // Reset ball to center
+        function resetBall() {
+            ballX = canvas.width / 2;
+            ballY = canvas.height / 2;
+            
+            // Set random direction for ball
+            ballSpeedX = INITIAL_BALL_SPEED * (Math.random() > 0.5 ? 1 : -1);
+            ballSpeedY = INITIAL_BALL_SPEED * (Math.random() * 2 - 1);
+        }
+        
+        // Simple sound effects (could be replaced with actual sound files)
+        function playSound(type) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            switch(type) {
+                case 'paddle':
+                    oscillator.frequency.value = 440;
+                    gainNode.gain.value = 0.1;
+                    oscillator.start();
+                    setTimeout(() => oscillator.stop(), 100);
+                    break;
+                case 'wall':
+                    oscillator.frequency.value = 300;
+                    gainNode.gain.value = 0.1;
+                    oscillator.start();
+                    setTimeout(() => oscillator.stop(), 50);
+                    break;
+                case 'score':
+                    oscillator.frequency.value = 220;
+                    gainNode.gain.value = 0.1;
+                    oscillator.start();
+                    setTimeout(() => {
+                        oscillator.frequency.value = 330;
+                        setTimeout(() => oscillator.stop(), 200);
+                    }, 200);
+                    break;
+            }
+        }
+        
+        // Game loop
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Start game loop on page load
+        gameLoop();
+        
+        // Event Listeners
+        startButton.addEventListener('click', () => {
+            gameRunning = true;
+            resetBall();
+            // Attempt to connect to server
+            connectToAIServer();
+        });
+        
+        resetButton.addEventListener('click', () => {
+            gameRunning = false;
+            playerScore = 0;
+            aiScore = 0;
+            playerScoreEl.textContent = playerScore;
+            aiScoreEl.textContent = aiScore;
+            playerPaddleY = 160;
+            aiPaddleY = 160;
+            resetBall();
+        });
+        
+        // Mouse control for paddle
+        canvas.addEventListener('mousemove', (e) => {
+            const canvasRect = canvas.getBoundingClientRect();
+            const mouseY = e.clientY - canvasRect.top;
+            
+            // Center paddle on mouse position
+            const newPaddleY = mouseY - PADDLE_HEIGHT / 2;
+            
+            // Keep paddle within canvas boundaries
+            if (newPaddleY >= 0 && newPaddleY + PADDLE_HEIGHT <= canvas.height) {
+                playerPaddleY = newPaddleY;
+            }
+        });
+        
+        // Keyboard controls
+        window.addEventListener('keydown', (e) => {
+            keysPressed[e.key] = true;
+        });
+        
+        window.addEventListener('keyup', (e) => {
+            keysPressed[e.key] = false;
+        });
+    </script>
+</body>
+</html>
