@@ -84,7 +84,7 @@
     }
   
   /* Circular buttons with images */
-        .experience-button {
+  .experience-button {
             display: inline-block;
             width: 260px;
             height: 260px;
@@ -98,16 +98,16 @@
             cursor: pointer;
             transition: transform 0.3s ease;
         }
-        .experience-button img {
+.experience-button img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             opacity: 0.8;
-        }
-        .experience-button:hover {
+        }  
+.experience-button:hover {
             transform: scale(1.05);
         }
-        .experience-label {
+.experience-label {
             position: absolute;
             bottom: 0;
             width: 100%;
