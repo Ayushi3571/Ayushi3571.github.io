@@ -28,65 +28,13 @@
   <link rel="shortcut icon" href ="https://ayushi3571.github.io/index/images/favicon.ico">
 
   <title> Ayushi Sharma ✨</title>
-
-  <style>
-    /* Add custom CSS for the hamburger menu */
-    .hamburger {
-      display: none;
-      cursor: pointer;
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      z-index: 1000;
-    }
-
-    .hamburger div {
-      width: 25px;
-      height: 3px;
-      background-color: #333;
-      margin: 5px;
-      transition: 0.4s;
-    }
-
-    .menu {
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      right: 15px;
-      top: 45px;
-      background-color: white;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .menu a {
-      padding: 10px 20px;
-      text-decoration: none;
-      color: #333;
-    }
-
-    .menu a:hover {
-      background-color: #f0f0f0;
-    }
-
-    @media (max-width: 768px) {
-      .hamburger {
-        display: block;
-      }
-    }
-  </style>
 </head>
 
 <body>
 <header>
   <div class="navbar navbar-default navbar-static-top">
     <div class="container">
-      <div class="navbar-brand" style="color: white;"><strong> <a href="https://ayushi3571.github.io/waph.html">WAPH</a> </strong></div>
-      <div class="hamburger" onclick="toggleMenu()">
-        <div></div>
-        <div></div>
-        <div></div>
+      <div class="navbar-brand" style="color: white;"><strong> <a href="https://ayushi3571.github.io/waph.html">WAPH</a> </strong></div>  
       </div>
       <div class="menu" id="menu">
         <a href="#education">Education</a>
@@ -114,14 +62,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   });
 
-  function toggleMenu() {
-    var menu = document.getElementById('menu');
-    if (menu.style.display === 'flex') {
-      menu.style.display = 'none';
-    } else {
-      menu.style.display = 'flex';
-    }
-  }
+  
 </script>
 
 <div class="jumbotron" id="jumbo1">
@@ -149,6 +90,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p>
           In my free time, I enjoy reading and working on projects.
         </p>
+        <hr>
       </div>
     </div>
   </div>
@@ -159,6 +101,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h2>Education</h2>
     <p><strong>University of Cincinnati</strong> - Bachelor of Science in Computer Science, GPA: 3.6/4.00 (Expected Graduation: May 2026)</p>
     <p>Relevant Courses: Data Structures, Linear Algebra, Computer Systems</p>
+    <hr>
   </div>
 </div>
 
