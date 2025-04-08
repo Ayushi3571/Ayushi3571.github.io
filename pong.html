@@ -59,6 +59,12 @@
 </head>
 <body>
     <h1>ATARI PONG vs AI</h1>
+    <p style="max-width: 600px; text-align: center; margin-bottom: 20px; line-height: 1.5;">
+        <strong>Making machines learn from experience:</strong><br><br>
+        This agent taught itself pong by 'playing' matches again and again! Each match consists of 25 games and at the end of every match it gets a reward of points earned. Negative points mean it lost more than it won and positive points mean it won more than it lost. For example, a score of 10 means 15 games won (+1) and 5 games lost (-5). The goal is to get the highest reward possible, and this method of training is called <strong>reinforcement learning</strong>.<br><br>
+        Below is a simplified browser version of my RL agent that you can play with online.
+    </p>
+    <sub>Or download the original model from githum (reqires some setup)</sub>
     <div class="scoreboard">
         <div>YOU: <span id="player-score">0</span></div>
         <div>AI: <span id="ai-score">0</span></div>
@@ -68,9 +74,15 @@
         <p>Use mouse or up/down arrow keys to move your paddle</p>
         <button id="startGame">Start Game</button>
         <button id="resetGame">Reset Game</button>
-        <div id="connectionStatus" class="connection-status disconnected">Disconnected from AI Server</div>
+        <div id="connectionStatus" class="connection-status disconnected">Disconnected from local AI Server</div>
     </div>
-
+    <p style="max-width: 600px; text-align: center; margin-bottom: 20px; line-height: 1.5;">
+        <strong>So that's cool and all but now what ...</strong><br><br>
+        While RL sounds simple in theory there are some complications to address. 
+        For example how do we figure out what went right or wrong: if the model wins a game and gets a reward how can it figure out which actions out of thousands got it the reward? 
+        Due to problems like this RL models take a very large number of trials to train. 
+        However combined with other machine learning methods reinforcement learning has been used in exciting ways including in current reasoning models like openAI and DeepSeek
+    </p>
     <script>
         // Game constants
         const PADDLE_HEIGHT = 80;
