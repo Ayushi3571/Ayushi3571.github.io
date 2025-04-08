@@ -59,7 +59,36 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   
 </script>
+<style>
+  /* Circular buttons with images */
+.experience-button {
+    display: inline-flex; /* Changed to flex */
+    justify-content: center;
+    align-items: center;
+    width: 160px;
+    height: 160px;
+    margin: 20px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    background-color: #EDE2EB;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    position: relative;
+    text-align: center;
+}
 
+.experience-button img {
+    width: 90%; /* Adjust as needed */
+    height: 90%;
+    object-fit: contain;
+    opacity: 0.8;
+}
+
+.experience-button:hover {
+      transform: scale(1.05);
+        }
+</style>
+  
 <div class="jumbotron" id="jumbo1">
   <div class="container">
     <h1>Computer Science Student</h1>
