@@ -82,4 +82,38 @@
       height: 150px;
       border-radius: 50%;
     }
+  
+  /* Circular buttons with images */
+        .experience-button {
+            display: inline-block;
+            width: 260px;
+            height: 260px;
+            margin: 20px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            text-align: center;
+            vertical-align: top;
+            position: relative;
+            background-color: #EDE2EB;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .experience-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+        }
+        .experience-button:hover {
+            transform: scale(1.05);
+        }
+        .experience-label {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            font-size: 0.9rem;
+            padding: 5px;
+        }
 }
