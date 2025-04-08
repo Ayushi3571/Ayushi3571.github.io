@@ -50,11 +50,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!document.cookie.includes("visited")) {
       alert("Welcome to my homepage for the first time!");
       document.cookie = "visited=" + new Date();
-    } else {
-      const lastVisit = document.cookie.replace(/(?:(?:^|.*;\s*)visited\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-      alert("Welcome back! Your last visit was " + lastVisit);
-      document.cookie = "visited=" + new Date();
-    }
+    } 
     function toggleDetails(id) {
             const section = document.getElementById(id);
             section.style.display = section.style.display === 'block' ? 'none' : 'block';
