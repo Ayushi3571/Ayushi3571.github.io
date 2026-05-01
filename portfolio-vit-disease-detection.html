@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ViT Disease Detection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f3ed;
+      --card: #ffffff;
+      --ink: #192119;
+      --muted: #5a6659;
+      --line: rgba(25, 33, 25, 0.1);
+      --leaf: #234631;
+      --moss: #4f775d;
+      --gold: #ba8b33;
+      --rust: #8b4728;
+      --soft: #f8f4ee;
+      --shadow: 0 8px 24px rgba(32, 46, 33, 0.05);
+      --radius: 18px;
+      --img-a: url("file:///C:/Users/ayush/Desktop/vines/coloured/Grape___Black_rot/00cab05d-e87b-4cf6-87d8-284f3ec99626___FAM_B.Rot%203244.JPG");
+      --img-b: url("file:///C:/Users/ayush/Desktop/vines/coloured/Grape___Black_rot/00cff577-afd4-4e36-ac9c-a52aa6ae5949___FAM_B.Rot%200508.JPG");
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 64px;
+    }
+
+    .hero,
+    .step {
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+    }
+
+    .hero {
+      padding: 34px;
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .eyebrow,
+    .stage-label,
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #f7f7f4;
+      color: var(--leaf);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      margin-top: 16px;
+      font-size: clamp(2.6rem, 5vw, 4.8rem);
+      line-height: 0.96;
+      max-width: 11ch;
+    }
+
+    .hero p {
+      margin-top: 16px;
+      color: var(--muted);
+      line-height: 1.72;
+      max-width: 58ch;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .hero-visual {
+      display: grid;
+      gap: 14px;
+      align-self: stretch;
+    }
+
+    .mini-stack {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .mini-card {
+      min-height: 170px;
+      padding: 18px;
+      border-radius: 16px;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      background: #faf9f6;
+    }
+
+    .mini-card.dark {
+      background: #f8faf7;
+    }
+
+    .mini-card.rust {
+      background: #fbf8f4;
+    }
+
+    .mini-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .mini-card p {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.94rem;
+    }
+
+    .step {
+      padding: 28px;
+      margin-top: 18px;
+    }
+
+    .step-head {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .step h2 {
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      margin-top: 14px;
+      line-height: 1.02;
+    }
+
+    .step-copy p {
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 64ch;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .code-snippet {
+      margin: 18px 0 0;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: #f5f7f4;
+      border: 1px solid var(--line);
+      overflow-x: auto;
+    }
+
+    .code-snippet pre {
+      margin: 0;
+      color: #203225;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .compare {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      background: #fcfcfa;
+    }
+
+    .compare-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .pane {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #ddd3c8;
+      aspect-ratio: 1 / 1;
+      border: 1px solid rgba(25, 33, 25, 0.08);
+    }
+
+    .pane::before {
+      content: attr(data-label);
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 3;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.86);
+      color: var(--ink);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .bg,
+    .focus,
+    .channel-shot {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .img-a {
+      background-image: var(--img-a);
+    }
+
+    .img-b {
+      background-image: var(--img-b);
+    }
+
+    .before .bg {
+      filter: saturate(1.03);
+    }
+
+    .mask .bg {
+      filter: grayscale(0.55) brightness(0.5);
+      transform: scale(1.01);
+    }
+
+    .mask .focus {
+      box-shadow: inset 0 0 0 1px rgba(214, 241, 214, 0.7);
+    }
+
+    .mask .focus::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(205, 237, 205, 0.8);
+      border-radius: 14px;
+      mix-blend-mode: screen;
+    }
+
+    .disease .bg {
+      filter: grayscale(0.15) brightness(0.74) saturate(0.9);
+    }
+
+    .edge .bg {
+      filter: grayscale(1) contrast(1.9) brightness(0.84);
+    }
+
+    .edge .vein {
+      position: absolute;
+      background: rgba(144, 255, 171, 0.75);
+      transform-origin: left center;
+      border-radius: 999px;
+    }
+
+    .edge .spot-mark,
+    .disease .spot-mark {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 218, 170, 0.92);
+      background: rgba(197, 58, 33, 0.34);
+    }
+
+    .stack-pane {
+      padding: 14px;
+      background: #233528;
+    }
+
+    .channels {
+      position: absolute;
+      inset: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .channel {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .channel::after {
+      content: attr(data-tag);
+      position: absolute;
+      left: 8px;
+      bottom: 8px;
+      padding: 4px 7px;
+      border-radius: 999px;
+      background: rgba(14, 20, 14, 0.8);
+      color: #fff8ef;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.04em;
+    }
+
+    .channel.gray .channel-shot {
+      filter: grayscale(1) contrast(1.18);
+    }
+
+    .channel.signal .channel-shot {
+      filter: sepia(0.92) saturate(2.4) hue-rotate(-10deg) contrast(1.18) brightness(0.92);
+    }
+
+    .channel.edgeview .channel-shot {
+      filter: grayscale(1) contrast(2.4) brightness(0.72);
+    }
+
+    .channel.edgeview .vein,
+    .stack-pane .vein {
+      position: absolute;
+      background: rgba(162, 255, 187, 0.72);
+      border-radius: 999px;
+      transform-origin: left center;
+    }
+
+    .focus.leaf-a {
+      clip-path: polygon(10% 43%, 24% 28%, 43% 16%, 60% 8%, 75% 16%, 88% 31%, 94% 55%, 86% 78%, 66% 95%, 42% 96%, 21% 81%, 10% 61%);
+    }
+
+    .focus.leaf-b {
+      clip-path: polygon(18% 22%, 44% 10%, 69% 16%, 86% 34%, 92% 54%, 81% 82%, 58% 94%, 34% 92%, 14% 73%, 9% 47%);
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .step-head,
+      .gallery,
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-stack {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <h1>Grape disease detection</h1>
+        <p>
+          a pre-processing pipeline that isolates the leaf, emphasizes lesion regions, preserves structural cues, and then converts the result into a 3-channel representation.
+        </p>
+        <div class="chips">
+          <span class="chip">HSV masking</span>
+          <span class="chip">Contour filtering</span>
+          <span class="chip">Edge extraction</span>
+          <span class="chip">3-channel ViT input</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="step">
+      <div class="step-head">
+        <div>
+          <div class="stage-label">Step 1</div>
+          <h2>Leaf isolation</h2>
+        </div>
+        <div class="step-copy">
+          <p>
+            HSV thresholds and morphology remove background clutter first, so the later lesion and edge stages operate
+            on the leaf instead of the concrete backdrop.
+          </p>
+        </div>
+      </div>
+      <div class="gallery">
+        <article class="compare">
+          <div class="compare-title"><span>Example A</span><span>Background suppressed</span></div>
+          <div class="compare-grid">
+            <div class="pane before" data-label="BEFORE">
+              <div class="bg img-a"></div>
+            </div>
+            <div class="pane mask" data-label="AFTER">
+              <div class="bg img-a"></div>
+              <div class="focus img-a leaf-a"></div>
+            </div>
+          </div>
+        </article>
+        <article class="compare">
+          <div class="compare-title"><span>Example B</span><span>Leaf kept, noise reduced</span></div>
+          <div class="compare-grid">
+            <div class="pane before" data-label="BEFORE">
+              <div class="bg img-b"></div>
+            </div>
+            <div class="pane mask" data-label="AFTER">
+              <div class="bg img-b"></div>
+              <div class="focus img-b leaf-b"></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="step">
+      <div class="step-head">
+        <div>
+          <div class="stage-label">Step 2</div>
+          <h2>Disease signal extraction</h2>
+        </div>
+        <div class="step-copy">
+          <p>
+            Lesions and dark marks are highlighted with color-based filtering plus area constraints, which helps the
+            model focus on likely infection zones instead of treating every texture variation as equally important.
+          </p>
+        </div>
+      </div>
+      <div class="gallery">
+        <article class="compare">
+          <div class="compare-title"><span>Example A</span><span>Spots surfaced</span></div>
+          <div class="compare-grid">
+            <div class="pane before" data-label="BEFORE">
+              <div class="bg img-a"></div>
+            </div>
+            <div class="pane disease" data-label="AFTER">
+              <div class="bg img-a"></div>
+              <span class="spot-mark" style="left:16%; top:49%; width:15%; height:15%;"></span>
+              <span class="spot-mark" style="left:35%; top:63%; width:8%; height:8%;"></span>
+              <span class="spot-mark" style="left:47%; top:37%; width:14%; height:14%;"></span>
+              <span class="spot-mark" style="left:56%; top:52%; width:7%; height:7%;"></span>
+              <span class="spot-mark" style="left:66%; top:55%; width:8%; height:8%;"></span>
+              <span class="spot-mark" style="left:71%; top:40%; width:7%; height:7%;"></span>
+            </div>
+          </div>
+        </article>
+        <article class="compare">
+          <div class="compare-title"><span>Example B</span><span>Black rot regions emphasized</span></div>
+          <div class="compare-grid">
+            <div class="pane before" data-label="BEFORE">
+              <div class="bg img-b"></div>
+            </div>
+            <div class="pane disease" data-label="AFTER">
+              <div class="bg img-b"></div>
+              <span class="spot-mark" style="left:18%; top:36%; width:10%; height:10%;"></span>
+              <span class="spot-mark" style="left:22%; top:48%; width:7%; height:7%;"></span>
+              <span class="spot-mark" style="left:28%; top:42%; width:7%; height:7%;"></span>
+              <span class="spot-mark" style="left:11%; top:58%; width:6%; height:6%;"></span>
+              <span class="spot-mark" style="left:70%; top:73%; width:11%; height:11%;"></span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="step">
+      <div class="step-head">
+        <div>
+          <div class="stage-label">Step 3</div>
+          <h2>Edge and structure cues</h2>
+        </div>
+        <div class="step-copy">
+          <p>
+            Canny-style edge information preserves the vein layout and lesion boundaries, which adds structural context
+            the disease mask alone would miss.
+          </p>
+        </div>
+      </div>
+      <div class="gallery">
+        <article class="compare">
+          <div class="compare-title"><span>Example A</span><span>Shape + vein emphasis</span></div>
+          <div class="compare-grid">
+            <div class="pane before" data-label="BEFORE">
+              <div class="bg img-a"></div>
+            </div>
+            <div class="pane edge" data-label="AFTER">
+              <div class="bg img-a"></div>
+              <span class="vein" style="left:48%; top:76%; width:33%; height:2px; transform:rotate(-74deg);"></span>
+              <span class="vein" style="left:48%; top:76%; width:30%; height:2px; transform:rotate(-36deg);"></span>
+              <span class="vein" style="left:48%; top:76%; width:26%; height:2px; transform:rotate(-6deg);"></span>
+              <span class="vein" style="left:48%; top:76%; width:28%; height:2px; transform:rotate(22deg);"></span>
+              <span class="vein" style="left:48%; top:76%; width:25%; height:2px; transform:rotate(50deg);"></span>
+              <span class="spot-mark" style="left:45%; top:34%; width:13%; height:13%;"></span>
+            </div>
+          </div>
+        </article>
+        <article class="compare">
+          <div class="compare-title"><span>Example B</span><span>Boundary preservation</span></div>
+          <div class="compare-grid">
+            <div class="pane before" data-label="BEFORE">
+              <div class="bg img-b"></div>
+            </div>
+            <div class="pane edge" data-label="AFTER">
+              <div class="bg img-b"></div>
+              <span class="vein" style="left:49%; top:79%; width:34%; height:2px; transform:rotate(-87deg);"></span>
+              <span class="vein" style="left:49%; top:79%; width:29%; height:2px; transform:rotate(-52deg);"></span>
+              <span class="vein" style="left:49%; top:79%; width:27%; height:2px; transform:rotate(-20deg);"></span>
+              <span class="vein" style="left:49%; top:79%; width:24%; height:2px; transform:rotate(18deg);"></span>
+              <span class="vein" style="left:49%; top:79%; width:20%; height:2px; transform:rotate(55deg);"></span>
+              <span class="spot-mark" style="left:18%; top:35%; width:12%; height:12%;"></span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="step">
+      <div class="step-head">
+        <div>
+          <div class="stage-label">Step 4</div>
+          <h2>ViT-ready 3-channel stack</h2>
+        </div>
+        <div class="step-copy">
+          <p>
+            The final representation stays compatible with a pretrained Vision Transformer: grayscale texture,
+            disease-signal mask, and edge structure are stacked into one 224x224 input.
+          </p>
+        </div>
+      </div>
+      <div class="gallery">
+        <article class="compare">
+          <div class="compare-title"><span>Example A</span><span>Final input layout</span></div>
+          <div class="compare-grid">
+            <div class="pane before" data-label="BEFORE">
+              <div class="bg img-a"></div>
+            </div>
+            <div class="pane stack-pane" data-label="AFTER">
+              <div class="channels">
+                <div class="channel gray">
+                  <div class="channel-shot img-a"></div>
+                </div>
+                <div class="channel signal" data-tag="disease">
+                  <div class="channel-shot img-a"></div>
+                </div>
+                <div class="channel edgeview" data-tag="edges">
+                  <div class="channel-shot img-a"></div>
+                  <span class="vein" style="left:44%; top:76%; width:37%; height:2px; transform:rotate(-74deg);"></span>
+                  <span class="vein" style="left:44%; top:76%; width:31%; height:2px; transform:rotate(-34deg);"></span>
+                  <span class="vein" style="left:44%; top:76%; width:26%; height:2px; transform:rotate(2deg);"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="compare">
+          <div class="compare-title"><span>Example B</span><span>Final input layout</span></div>
+          <div class="compare-grid">
+            <div class="pane before" data-label="BEFORE">
+              <div class="bg img-b"></div>
+            </div>
+            <div class="pane stack-pane" data-label="AFTER">
+              <div class="channels">
+                <div class="channel gray">
+                  <div class="channel-shot img-b"></div>
+                </div>
+                <div class="channel signal" data-tag="disease">
+                  <div class="channel-shot img-b"></div>
+                </div>
+                <div class="channel edgeview" data-tag="edges">
+                  <div class="channel-shot img-b"></div>
+                  <span class="vein" style="left:46%; top:79%; width:37%; height:2px; transform:rotate(-86deg);"></span>
+                  <span class="vein" style="left:46%; top:79%; width:29%; height:2px; transform:rotate(-44deg);"></span>
+                  <span class="vein" style="left:46%; top:79%; width:24%; height:2px; transform:rotate(4deg);"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>
